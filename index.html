@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HerDay Companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f9f6ff;
+    }
+
+    header {
+      background: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+    }
+
+    h1 { margin: 0; }
+
+    .btn {
+      background: #7c3aed;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    section {
+      padding: 50px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 10px 0;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    footer {
+      background: #111;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>HerDay Companion</h1>
+  <button class="btn">Book Now</button>
+</header>
+
+<section>
+  <h2>Do not go alone when you do not want to</h2>
+  <p>Book a trusted companion for movies, shopping, or a full day out.</p>
+</section>
+
+<section>
+  <h2>Services</h2>
+
+  <div class="card">
+    <h3>Movie Companion</h3>
+    <p>Go to movies or cafés with a trusted companion</p>
+    <p>₹499+</p>
+  </div>
+
+  <div class="card">
+    <h3>Shopping Companion</h3>
+    <p>Help with shopping or city visits</p>
+    <p>₹699+</p>
+  </div>
+
+  <div class="card">
+    <h3>Whole Day Support</h3>
+    <p>Full day companionship</p>
+    <p>₹1499+</p>
+  </div>
+</section>
+
+<section>
+  <h2>Pricing</h2>
+  <div class="card">2 hours - ₹499</div>
+  <div class="card">4 hours - ₹899</div>
+  <div class="card">6 hours - ₹1299</div>
+  <div class="card">8 hours - ₹1699</div>
+</section>
+
+<section>
+  <h2>Book Companion</h2>
+
+  <form onsubmit="submitForm(event)">
+    <div class="grid grid-2">
+      <div>
+        <label>Name</label>
+        <input required>
+      </div>
+
+      <div>
+        <label>Phone</label>
+        <input required>
+      </div>
+    </div>
+
+    <label>Service</label>
+    <select>
+      <option>Movie</option>
+      <option>Shopping</option>
+      <option>Full Day</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date">
+
+    <label>Notes</label>
+    <textarea></textarea>
+
+    <br><br>
+    <button class="btn">Submit</button>
+  </form>
+
+  <p id="msg"></p>
+</section>
+
+<footer>
+  <h3>HerDay Companion</h3>
+  <p>Safe companionship platform</p>
+</footer>
+
+<script>
+function submitForm(e){
+  e.preventDefault();
+  document.getElementById("msg").innerText =
+    "Booking submitted (demo mode)";
+}
+</script>
+
+</body>
+</html>
