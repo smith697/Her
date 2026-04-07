@@ -1,0 +1,726 @@
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { ShieldCheck, Clock3, MapPin, PhoneCall, Star, CheckCircle2, CalendarDays, HeartHandshake, MessageCircle, UserCheck, Menu, X } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+
+const services = [
+  {
+    id: "movie",
+    title: "Movie Companion",
+    description: "For women who do not want to go alone to a movie, café, or casual outing.",
+    price: 499,
+    slots: ["2 hours", "4 hours", "6 hours"],
+  },
+  {
+    id: "shopping",
+    title: "Shopping Companion",
+    description: "A trusted person to accompany you for shopping, errands, or city visits.",
+    price: 699,
+    slots: ["2 hours", "4 hours", "8 hours"],
+  },
+  {
+    id: "day",
+    title: "Whole Day Support",
+    description: "Book a companion for the full day with flexible time slots and planned support.",
+    price: 1499,
+    slots: ["6 hours", "8 hours", "12 hours"],
+  },
+];
+
+const pricingMap = {
+  "2 hours": 499,
+  "4 hours": 899,
+  "6 hours": 1299,
+  "8 hours": 1699,
+  "12 hours": 2499,
+};
+
+const testimonials = [
+  {
+    name: "Ananya",
+    text: "This idea feels genuinely thoughtful. Sometimes you just do not want to go alone, and this makes it easier.",
+  },
+  {
+    name: "Riya",
+    text: "The website is simple and trustworthy. I especially liked the safety-first approach and clear pricing.",
+  },
+  {
+    name: "Megha",
+    text: "Would love to use this for movies, events, and shopping plans where I do not want to be by myself.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Who is this service for?",
+    a: "This service is designed for female clients looking for safe, pre-booked companionship for outings like movies, shopping, cafés, and city visits.",
+  },
+  {
+    q: "How are companions selected?",
+    a: "Companions should be verified manually with ID checks, profile screening, and clear service rules before accepting bookings.",
+  },
+  {
+    q: "Can I choose a time slot?",
+    a: "Yes. You can select a service, choose a date, city, and preferred duration based on available booking slots.",
+  },
+  {
+    q: "Is payment online?",
+    a: "Right now this demo only collects booking requests. In production, you can connect Razorpay or Stripe for online payments.",
+  },
+];
+
+function Header() {
+  const [open, setOpen] = useState(false);
+
+  const navItems = [
+    ["Services", "#services"],
+    ["How it works", "#how-it-works"],
+    ["Safety", "#safety"],
+    ["Pricing", "#pricing"],
+    ["FAQ", "#faq"],
+    ["Book", "#book"],
+  ];
+
+  return (
+    <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+        <a href="#home" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-white">
+            <HeartHandshake className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm text-slate-500">Trusted social support</p>
+            <h1 className="text-lg font-bold tracking-tight">HerDay Companion</h1>
+          </div>
+        </a>
+
+        <nav className="hidden items-center gap-6 md:flex">
+          {navItems.map(([label, href]) => (
+            <a key={label} href={href} className="text-sm text-slate-700 transition hover:text-black">
+              {label}
+            </a>
+          ))}
+          <Button asChild className="rounded-2xl px-5">
+            <a href="#book">Book now</a>
+          </Button>
+        </nav>
+
+        <button
+          className="rounded-xl border p-2 md:hidden"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle Menu"
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
+
+      {open && (
+        <div className="border-t bg-white px-4 py-4 md:hidden">
+          <div className="flex flex-col gap-4">
+            {navItems.map(([label, href]) => (
+              <a key={label} href={href} className="text-sm text-slate-700" onClick={() => setOpen(false)}>
+                {label}
+              </a>
+            ))}
+            <Button asChild className="rounded-2xl">
+              <a href="#book" onClick={() => setOpen(false)}>Book now</a>
+            </Button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section id="home" className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-rose-50 via-white to-white" />
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col justify-center"
+        >
+          <Badge className="mb-4 w-fit rounded-full px-4 py-1 text-sm">For safe, planned companionship</Badge>
+          <h2 className="max-w-xl text-4xl font-bold tracking-tight text-slate-900 md:text-6xl">
+            Do not go alone when you do not want to.
+          </h2>
+          <p className="mt-5 max-w-xl text-base leading-7 text-slate-600 md:text-lg">
+            Book a trusted companion for movies, shopping, café visits, events, or a full day out. Clear slot-based pricing, a professional booking flow, and a safety-first approach.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button asChild className="rounded-2xl px-6 py-6 text-base">
+              <a href="#book">Book a slot</a>
+            </Button>
+            <Button asChild variant="outline" className="rounded-2xl px-6 py-6 text-base">
+              <a href="#services">Explore services</a>
+            </Button>
+          </div>
+
+          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              ["Verified flow", ShieldCheck],
+              ["Slot pricing", Clock3],
+              ["City support", MapPin],
+              ["Quick response", MessageCircle],
+            ].map(([label, Icon]) => (
+              <div key={label} className="rounded-2xl border bg-white p-4 shadow-sm">
+                <Icon className="mb-2 h-5 w-5" />
+                <p className="text-sm font-medium text-slate-700">{label}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="grid gap-4"
+        >
+          <Card className="rounded-[28px] border-0 shadow-xl">
+            <CardContent className="p-6 md:p-8">
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Today’s featured service</p>
+                  <h3 className="text-2xl font-bold">Whole Day Support</h3>
+                </div>
+                <Badge className="rounded-full px-3 py-1">Popular</Badge>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-3xl bg-slate-50 p-5">
+                  <CalendarDays className="mb-3 h-5 w-5" />
+                  <p className="text-sm text-slate-500">Flexible duration</p>
+                  <p className="text-lg font-semibold">6, 8, or 12 hours</p>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-5">
+                  <ShieldCheck className="mb-3 h-5 w-5" />
+                  <p className="text-sm text-slate-500">Safety rules</p>
+                  <p className="text-lg font-semibold">Verified support process</p>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-5">
+                  <PhoneCall className="mb-3 h-5 w-5" />
+                  <p className="text-sm text-slate-500">Emergency contact</p>
+                  <p className="text-lg font-semibold">Included in booking form</p>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-5">
+                  <Clock3 className="mb-3 h-5 w-5" />
+                  <p className="text-sm text-slate-500">Starting price</p>
+                  <p className="text-lg font-semibold">₹1499 onwards</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {services.map((service) => (
+              <Card key={service.id} className="rounded-[24px] shadow-sm">
+                <CardContent className="p-5">
+                  <h4 className="text-lg font-semibold">{service.title}</h4>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{service.description}</p>
+                  <p className="mt-4 text-xl font-bold">From ₹{service.price}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function Services() {
+  return (
+    <section id="services" className="mx-auto max-w-7xl px-4 py-16 md:px-6">
+      <div className="mb-8 max-w-2xl">
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Services</p>
+        <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Choose the kind of company you need</h3>
+        <p className="mt-3 text-slate-600">
+          The website is designed for a single service provider or small women-focused companion brand with transparent offerings.
+        </p>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        {services.map((service) => (
+          <Card key={service.id} className="rounded-[28px] border shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <CardContent className="p-6">
+              <div className="mb-4 flex items-center justify-between">
+                <Badge variant="secondary" className="rounded-full px-3 py-1">{service.title}</Badge>
+                <Star className="h-5 w-5" />
+              </div>
+              <h4 className="text-2xl font-bold">₹{service.price}+</h4>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{service.description}</p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {service.slots.map((slot) => (
+                  <span key={slot} className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                    {slot}
+                  </span>
+                ))}
+              </div>
+              <Button asChild className="mt-6 w-full rounded-2xl">
+                <a href="#book">Select service</a>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  const steps = [
+    {
+      title: "Choose service",
+      text: "Select movie, shopping, or full-day support based on your plan.",
+      icon: UserCheck,
+    },
+    {
+      title: "Pick slot and city",
+      text: "Choose your preferred date, duration, and location details.",
+      icon: CalendarDays,
+    },
+    {
+      title: "Submit booking",
+      text: "Fill in your contact details, emergency contact, and outing notes.",
+      icon: CheckCircle2,
+    },
+    {
+      title: "Get confirmation",
+      text: "In production, payment and booking approval can be automated instantly.",
+      icon: MessageCircle,
+    },
+  ];
+
+  return (
+    <section id="how-it-works" className="bg-slate-50 py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <div className="mb-10 max-w-2xl">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">How it works</p>
+          <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">A simple booking flow for real users</h3>
+        </div>
+        <div className="grid gap-6 md:grid-cols-4">
+          {steps.map((step, i) => (
+            <Card key={step.title} className="rounded-[28px] border-0 shadow-sm">
+              <CardContent className="p-6">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm">
+                  <step.icon className="h-5 w-5" />
+                </div>
+                <p className="mb-2 text-sm text-slate-400">Step {i + 1}</p>
+                <h4 className="text-xl font-semibold">{step.title}</h4>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{step.text}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SafetySection() {
+  const items = [
+    "Manual profile verification",
+    "Government ID validation process",
+    "Emergency contact capture",
+    "Clear service boundaries and terms",
+    "Pre-defined public meetup rule",
+    "Support number and booking log",
+  ];
+
+  return (
+    <section id="safety" className="mx-auto max-w-7xl px-4 py-16 md:px-6">
+      <div className="grid gap-8 md:grid-cols-2 md:items-center">
+        <div>
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Safety first</p>
+          <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">This idea only works if trust is built into the product</h3>
+          <p className="mt-4 text-slate-600 leading-7">
+            For public launch, this service should stay clearly positioned as a professional companionship and support platform with strict boundaries, transparent policies, and safe public meetup guidelines.
+          </p>
+        </div>
+
+        <Card className="rounded-[32px] shadow-lg">
+          <CardContent className="p-6 md:p-8">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {items.map((item) => (
+                <div key={item} className="flex items-start gap-3 rounded-2xl bg-slate-50 p-4">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" />
+                  <p className="text-sm leading-6 text-slate-700">{item}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+function Pricing() {
+  const rows = [
+    ["2 hours", "₹499"],
+    ["4 hours", "₹899"],
+    ["6 hours", "₹1299"],
+    ["8 hours", "₹1699"],
+    ["12 hours", "₹2499"],
+  ];
+
+  return (
+    <section id="pricing" className="bg-slate-50 py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <div className="mb-10 max-w-2xl">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Pricing</p>
+          <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Slot-based charges</h3>
+          <p className="mt-3 text-slate-600">You can adjust these prices later. For now, this gives your website a clean public pricing structure.</p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
+          <Card className="rounded-[32px] shadow-sm">
+            <CardContent className="p-4 md:p-6">
+              <div className="overflow-hidden rounded-3xl border">
+                <table className="w-full text-left">
+                  <thead className="bg-slate-100 text-sm text-slate-600">
+                    <tr>
+                      <th className="px-4 py-4 font-medium">Duration</th>
+                      <th className="px-4 py-4 font-medium">Charge</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map(([duration, charge]) => (
+                      <tr key={duration} className="border-t bg-white">
+                        <td className="px-4 py-4 font-medium text-slate-800">{duration}</td>
+                        <td className="px-4 py-4 text-slate-700">{charge}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[32px] border-0 shadow-lg">
+            <CardContent className="p-6">
+              <h4 className="text-2xl font-bold">Production add-ons</h4>
+              <div className="mt-5 grid gap-3">
+                {[
+                  "Razorpay payment link",
+                  "Automated email confirmations",
+                  "WhatsApp booking alerts",
+                  "Admin dashboard",
+                  "Availability calendar",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
+                    <CheckCircle2 className="h-5 w-5" />
+                    <p className="text-sm text-slate-700">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BookingForm() {
+  const [service, setService] = useState("movie");
+  const [slot, setSlot] = useState("2 hours");
+  const [submitted, setSubmitted] = useState(false);
+
+  const serviceDetails = useMemo(() => services.find((s) => s.id === service) || services[0], [service]);
+  const total = pricingMap[slot] || serviceDetails.price;
+
+  return (
+    <section id="book" className="mx-auto max-w-7xl px-4 py-16 md:px-6">
+      <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
+        <Card className="rounded-[32px] shadow-lg">
+          <CardContent className="p-6 md:p-8">
+            <div className="mb-6">
+              <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Booking</p>
+              <h3 className="mt-2 text-3xl font-bold tracking-tight">Book your companion slot</h3>
+              <p className="mt-3 text-slate-600">This demo form is front-end only. For public launch, connect it to Firebase, Supabase, or a backend API.</p>
+            </div>
+
+            <form
+              className="grid gap-4"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSubmitted(true);
+              }}
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Full name</label>
+                  <Input placeholder="Enter your name" required />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Phone number</label>
+                  <Input placeholder="Enter your number" required />
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Service</label>
+                  <Select value={service} onValueChange={(value) => {
+                    setService(value);
+                    const defaultSlot = (services.find((s) => s.id === value)?.slots || ["2 hours"])[0];
+                    setSlot(defaultSlot);
+                  }}>
+                    <SelectTrigger className="rounded-2xl">
+                      <SelectValue placeholder="Choose service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {services.map((s) => (
+                        <SelectItem key={s.id} value={s.id}>{s.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Duration</label>
+                  <Select value={slot} onValueChange={setSlot}>
+                    <SelectTrigger className="rounded-2xl">
+                      <SelectValue placeholder="Choose duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {serviceDetails.slots.map((s) => (
+                        <SelectItem key={s} value={s}>{s}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Date</label>
+                  <Input type="date" required className="rounded-2xl" />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">City / Area</label>
+                  <Input placeholder="Pune, Mumbai, etc." required />
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Emergency contact</label>
+                  <Input placeholder="Emergency contact number" required />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium text-slate-700">Meeting type</label>
+                  <Input placeholder="Movie, shopping, café, event" />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">Notes</label>
+                <Textarea
+                  placeholder="Share your plan, preferred public location, and any important details..."
+                  className="min-h-[120px] rounded-2xl"
+                />
+              </div>
+
+              <div className="flex flex-col gap-3 rounded-3xl bg-slate-50 p-5 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-sm text-slate-500">Estimated charge</p>
+                  <p className="text-2xl font-bold">₹{total}</p>
+                </div>
+                <Button type="submit" className="rounded-2xl px-6 py-6 text-base">Submit booking request</Button>
+              </div>
+
+              {submitted && (
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+                  Booking request submitted in demo mode. For real public use, connect this form to a backend and payment gateway.
+                </div>
+              )}
+            </form>
+          </CardContent>
+        </Card>
+
+        <div className="grid gap-6">
+          <Card className="rounded-[32px] shadow-sm">
+            <CardContent className="p-6">
+              <h4 className="text-2xl font-bold">Booking summary</h4>
+              <div className="mt-5 space-y-4">
+                <div className="flex items-center justify-between border-b pb-3">
+                  <span className="text-slate-600">Service</span>
+                  <span className="font-medium">{serviceDetails.title}</span>
+                </div>
+                <div className="flex items-center justify-between border-b pb-3">
+                  <span className="text-slate-600">Duration</span>
+                  <span className="font-medium">{slot}</span>
+                </div>
+                <div className="flex items-center justify-between border-b pb-3">
+                  <span className="text-slate-600">Charge</span>
+                  <span className="font-medium">₹{total}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600">Availability</span>
+                  <Badge className="rounded-full">Open</Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-[32px] shadow-sm">
+            <CardContent className="p-6">
+              <h4 className="text-2xl font-bold">Important policy note</h4>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                Keep the service framed as safe social companionship and support for public places only. Add identity verification, clear boundaries, cancellation policy, and user agreement before launch.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  return (
+    <section className="bg-slate-50 py-16">
+      <div className="mx-auto max-w-7xl px-4 md:px-6">
+        <div className="mb-10 max-w-2xl">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">Testimonials</p>
+          <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">What users may look for on this platform</h3>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <Card key={t.name} className="rounded-[28px] shadow-sm">
+              <CardContent className="p-6">
+                <div className="mb-4 flex gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-current" />
+                  ))}
+                </div>
+                <p className="text-sm leading-7 text-slate-600">“{t.text}”</p>
+                <p className="mt-4 font-semibold">{t.name}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQ() {
+  return (
+    <section id="faq" className="mx-auto max-w-5xl px-4 py-16 md:px-6">
+      <div className="mb-10 text-center">
+        <p className="text-sm font-medium uppercase tracking-[0.18em] text-slate-500">FAQ</p>
+        <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Common questions</h3>
+      </div>
+      <div className="grid gap-4">
+        {faqs.map((item) => (
+          <Card key={item.q} className="rounded-[24px] shadow-sm">
+            <CardContent className="p-6">
+              <h4 className="text-lg font-semibold">{item.q}</h4>
+              <p className="mt-2 text-sm leading-7 text-slate-600">{item.a}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CTA() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 pb-16 md:px-6">
+      <div className="rounded-[36px] bg-black px-6 py-10 text-white md:px-10 md:py-14">
+        <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <p className="text-sm uppercase tracking-[0.18em] text-white/70">Launch-ready concept</p>
+            <h3 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Ready to turn this into a real public booking website?</h3>
+            <p className="mt-3 max-w-2xl text-white/75">
+              This front-end is a strong start. The next step is adding real database storage, payments, admin controls, and deployment.
+            </p>
+          </div>
+          <Button asChild variant="secondary" className="rounded-2xl px-6 py-6 text-base text-black">
+            <a href="#book">Start with booking flow</a>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t bg-white">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-4 md:px-6">
+        <div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-black text-white">
+              <HeartHandshake className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-sm text-slate-500">Companion platform</p>
+              <p className="font-bold">HerDay Companion</p>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-7 text-slate-600">
+            A concept website for safe companionship bookings with slot-based pricing and a clean public-facing experience.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="font-semibold">Website</h4>
+          <div className="mt-4 space-y-3 text-sm text-slate-600">
+            <a className="block hover:text-black" href="#services">Services</a>
+            <a className="block hover:text-black" href="#pricing">Pricing</a>
+            <a className="block hover:text-black" href="#book">Booking</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold">Policies</h4>
+          <div className="mt-4 space-y-3 text-sm text-slate-600">
+            <a className="block hover:text-black" href="#safety">Safety</a>
+            <a className="block hover:text-black" href="#faq">FAQ</a>
+            <span className="block">Terms & conditions</span>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="font-semibold">Contact</h4>
+          <div className="mt-4 space-y-3 text-sm text-slate-600">
+            <p>Email: hello@herdaycompanion.com</p>
+            <p>Phone: +91 90000 00000</p>
+            <p>City: Pune, India</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function CompanionWebsite() {
+  return (
+    <main className="min-h-screen bg-white text-slate-900">
+      <Header />
+      <Hero />
+      <Services />
+      <HowItWorks />
+      <SafetySection />
+      <Pricing />
+      <BookingForm />
+      <Testimonials />
+      <FAQ />
+      <CTA />
+      <Footer />
+    </main>
+  );
+}
